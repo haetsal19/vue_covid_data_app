@@ -1,30 +1,46 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/chart">날짜별 추이</router-link> |
+    <router-link to="/map">지역별 현황</router-link>
   </nav>
   <router-view />
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import { fetchDistricts, fetchVaccinated, fetchInfState } from "@/api";
+import { useStore } from "vuex";
+import moment from "moment";
 
-nav {
-  padding: 30px;
+export default {
+  setup() {
+    const store = useStore();
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+    // const districts = getDistricts();
+    // const vaccinated = getvaccinated();
+    async function initInfState() {
+      const res = await fetchInfState();
+      const infState = {
+        labels: [],
+        infList: [],
+        deathList: [],
+        totalInf: 0,
+        totalDeath: 0,
+      };
 
-    &.router-link-exact-active {
-      color: #42b983;
+      res.forEach((value, index) => {
+        if (index === 0) return;
+
+        infState.labels.push(moment(value.createDt).format("MM/DD"));
+        infState.infList.push(res[index].decideCnt - res[index - 1].decideCnt);
+        infState.deathList.push(res[index].deathCnt - res[index - 1].deathCnt);
+        infState.totalInf = res[index].decideCnt;
+        infState.totalDeath = res[index].deathCnt;
+      });
+
+      store.commit("initInfState", infState);
     }
-  }
-}
-</style>
+
+    initInfState();
+  },
+};
+</script>
