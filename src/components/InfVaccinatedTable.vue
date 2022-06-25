@@ -12,7 +12,7 @@
       </ul>
       <ul>
         <li>사망자</li>
-        <li class="up">▲{{ diffDeath }}명</li>
+        <li class="up" v-if="diffDeath">▲{{ diffDeath }}명</li>
         <li>{{ totalDeath }}명</li>
       </ul>
       <!--      <ul>-->
@@ -33,23 +33,23 @@ export default {
     const store = useStore();
 
     const diffInf = computed(() =>
-      store.state.infState.infList[
-        store.state.infState.infList.length - 1
+      store.state.infState.infState.infList[
+        store.state.infState.infState.infList.length - 1
       ]?.toLocaleString()
     );
 
     const diffDeath = computed(() =>
-      store.state.infState.deathList[
-        store.state.infState.deathList.length - 1
+      store.state.infState.infState.deathList[
+        store.state.infState.infState.deathList.length - 1
       ]?.toLocaleString()
-    );
+    ); //store.state.infState.deathList.length - 1
 
     const totalInf = computed(() =>
-      store.state.infState.totalInf?.toLocaleString()
+      store.state.infState.infState.totalInf?.toLocaleString()
     );
 
     const totalDeath = computed(() =>
-      store.state.infState.totalDeath?.toLocaleString()
+      store.state.infState.infState.totalDeath?.toLocaleString()
     );
 
     return {

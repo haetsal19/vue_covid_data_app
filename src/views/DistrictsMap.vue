@@ -1,9 +1,19 @@
 <template>
-  <h1>This is an 'DistrictsMap' page</h1>
+  <div>
+    <h2>지역별 확진자 현황</h2>
+  </div>
+
+  <svg-map />
 </template>
 
-<script>
-export default {};
-</script>
+<script setup>
+import { useStore } from "vuex";
 
-<style scoped></style>
+import SvgMap from "@/components/svgMap";
+
+const store = useStore();
+const setDistricts = () => {
+  store.dispatch("districts/setDistricts");
+};
+setDistricts();
+</script>
