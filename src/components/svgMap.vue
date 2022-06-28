@@ -130,7 +130,8 @@ import { useStore } from "vuex";
 import { computed, reactive } from "vue";
 
 const store = useStore();
-const districts = computed(() => store.state.districts.districts);
+const districts = computed(() => store.state.districts);
+console.log("test", districts.value);
 const pos = reactive({
   Busan: { x: 320, y: 400, isHover: false },
   Daegu: { x: 265, y: 305, isHover: false },

@@ -1,11 +1,12 @@
 <script>
-import { defineComponent, h, computed } from "vue";
+import { defineComponent, h, computed, watch, ref } from "vue";
 import { Bar } from "vue-chartjs";
 import "chart.js/auto";
 import { useStore } from "vuex";
 
 export default defineComponent({
   name: "BarChart",
+  emits: ["forceRerender"],
   components: {
     Bar,
   },
@@ -22,21 +23,36 @@ export default defineComponent({
       type: Number,
       default: 400,
     },
-  },
-  setup(props) {
-    const store = useStore();
 
-    const infState = computed(() => store.state.infState.infState);
-    console.log(infState);
+    period: {
+      type: Number,
+      default: 7,
+    },
+  },
+
+  setup(props) {
+    console.log("dfdd", props.period);
+    const store = useStore();
+    let infState = ref("");
+
+    if (props.period === 7) {
+      infState.value = computed(() => store.getters["infState/weeklyInfected"]);
+    } else {
+      infState.value = computed(
+        () => store.getters["infState/monthlyInfected"]
+      );
+    }
+
+    console.log("infstate", infState);
     const chartData = {
-      labels: infState.value.labels,
+      labels: infState.value.value.labels,
       datasets: [
         {
           label: "일일 확진자수",
           yAxisID: "left-axis",
           borderColor: "white",
           borderWidth: 0,
-          data: infState.value.infList,
+          data: infState.value.value.infList,
           backgroundColor: "#0069c0",
           order: 2,
           barThickness: 10,
@@ -47,12 +63,13 @@ export default defineComponent({
           yAxisID: "right-axis",
           borderColor: "#c62828",
           borderWidth: 2,
-          data: infState.value.deathList,
+          data: infState.value.value.deathList,
           backgroundColor: "#c62828",
           order: 1,
         },
       ],
     };
+
     const chartOptions = {
       responsive: true,
       maintainAspectRatio: false,
@@ -98,10 +115,12 @@ export default defineComponent({
         },
       },
     };
+
     return () =>
       h(Bar, {
         chartData,
         chartOptions,
+        // periodToggle,
         chartId: props.chartId,
         width: props.width,
         height: props.height,

@@ -2,21 +2,11 @@ import axios from "axios";
 import moment from "moment";
 
 //infState: 코로나 감염 현황 연관 데이터
-//vaccinated: 백신 접종 현황 연관 데이터
 //districts: 지역별 감염 현황 연관 데이터
-
-interface IInfstate {
-  labels: string[];
-  infList: number[];
-  deathList: number[];
-  totalInf: number;
-  totalDeath: number;
-}
 
 const url = {
   infState:
     "http://openapi.data.go.kr/openapi/service/rest/Covid19/getCovid19InfStateJson",
-  vaccinated: "https://api.odcloud.kr/api/15077756/v1/vaccine-stat",
   districts:
     "http://openapi.data.go.kr/openapi/service/rest/Covid19/getCovid19SidoInfStateJson",
 };
@@ -43,28 +33,6 @@ const fetchInfState = () => {
     .catch(console.log);
 };
 
-//백신접종 현황
-const fetchVaccinated = () => {
-  const params = {
-    serviceKey: key,
-    page: "1",
-    perPage: "10",
-    "cond[baseDate::GTE]": moment().subtract(1, "d").format("YYYY-MM-DD"),
-    "cond[sido::EQ]": "전국",
-  };
-
-  //URLSearchParams.toString() : URL에 쓰기 적합한 형태의 쿼리 문자열을 반환
-  //원래형식 'ServiceKey=${key}&startCreateDt=${startCreateDt}&endCreateDt=${endCreateDt}'
-  return axios
-    .get(`${url.vaccinated}?${new URLSearchParams(params).toString()}`)
-    .then((res) => {
-      console.log("ㄲ까까까", res);
-      return res;
-    })
-    .then((res) => res.data.data[res.data.data.length - 1].totalFirstCnt)
-    .catch(console.log);
-};
-
 //지역별 확진자, 사망자 현황
 const fetchDistricts = () => {
   const params = {
@@ -81,4 +49,4 @@ const fetchDistricts = () => {
     .catch(console.log);
 };
 
-export { fetchVaccinated, fetchDistricts, fetchInfState, IInfstate };
+export { fetchDistricts, fetchInfState };

@@ -1,33 +1,38 @@
 import moment from "moment";
-import { fetchInfState, IInfstate } from "@/api";
+import { fetchInfState } from "@/api";
+import { IInfResponse, IInfState, IRootState } from "@/type";
+import { Module } from "vuex";
 
-export const infState = {
+export const infState: Module<IInfState, IRootState> = {
   namespaced: true,
   state: {
-    infState: {
-      labels: [],
-      infList: [],
-      deathList: [],
-      totalInf: 0,
-      totalDeath: 0,
-    },
-  },
+    labels: [],
+    infList: [],
+    deathList: [],
+    totalInf: 0,
+    totalDeath: 0,
+  } as IInfState,
   mutations: {
-    updateInfState(state, payload) {
-      console.log("init inf state", payload);
-      state.infState = payload;
+    updateInfState(state: IInfState, payload: IInfState) {
+      console.log("init inf state", state, payload);
+      state.labels = payload.labels;
+      state.infList = payload.infList;
+      state.deathList = payload.deathList;
+      state.totalInf = payload.totalInf;
+      state.totalDeath = payload.totalDeath;
     },
   },
   actions: {
     async setInfState({ commit }) {
-      const infState: IInfstate = {
+      const infState: IInfState = {
         labels: [],
         infList: [],
         deathList: [],
         totalInf: 0,
         totalDeath: 0,
       };
-      const res = await fetchInfState();
+
+      const res = <IInfResponse[]>await fetchInfState();
       res.forEach((value, index) => {
         if (index === 0) return;
         infState.labels.push(moment(value.createDt).format("MM/DD"));
@@ -36,22 +41,24 @@ export const infState = {
         infState.totalInf = res[index].decideCnt;
         infState.totalDeath = res[index].deathCnt;
       });
+
       commit("updateInfState", infState);
     },
   },
   getters: {
-    districtsWeek: (state) => {
+    weeklyInfected: (state) => {
+      console.log("week", state);
       return {
-        labels: state.infState.labels.slice(-7),
-        infList: state.infState.infList.slice(-7),
-        deathList: state.infState.deathList.slice(-7),
+        labels: state.labels.slice(-7),
+        infList: state.infList.slice(-7),
+        deathList: state.deathList.slice(-7),
       };
     },
-    districtsMonth: (state) => {
+    monthlyInfected: (state) => {
       return {
-        labels: state.infState.labels.slice(-30),
-        infList: state.infState.infList.slice(-30),
-        deathList: state.infState.deathList.slice(-30),
+        labels: state.labels.slice(-30),
+        infList: state.infList.slice(-30),
+        deathList: state.deathList.slice(-30),
       };
     },
   },
