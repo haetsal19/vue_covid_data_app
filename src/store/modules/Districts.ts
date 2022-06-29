@@ -4,14 +4,14 @@ import { Module } from "vuex";
 
 export const districts: Module<IDistrictsState, IRootState> = {
   namespaced: true,
-  state: {} as IDistrictsState, //state.distrcits.district
+  state: {} as IDistrictsState,
   mutations: {
     updateDistricts(state: IDistrictsState, payload: IDistrictsState) {
       console.log("init districts", payload);
       Object.keys(payload).forEach((key) => {
         state[key] = payload[key];
       });
-    }, //store.commit("distrcits/updateDistricts", params)
+    },
   },
   actions: {
     async setDistricts({ commit }) {
@@ -47,5 +47,4 @@ export const districts: Module<IDistrictsState, IRootState> = {
       commit("updateDistricts", districts);
     },
   },
-  //store.dispatch("districts/setDistricts", params)
 };

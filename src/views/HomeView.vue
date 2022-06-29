@@ -19,12 +19,7 @@ export default {
       store.dispatch("infState/setInfState");
     };
 
-    // const setVaccinated = () => {
-    //   store.dispatch("vaccinated/setVaccinated");
-    // };
-
     setInfState();
-    // setVaccinated();
   },
 };
 </script>
