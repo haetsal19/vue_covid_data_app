@@ -11,8 +11,8 @@ export interface IDistricts {
 }
 
 export interface IDistrictsState {
-  [gubun: string]: IDistricts;
-}
+  [key: string]: IDistricts;
+} //공통적인것만 빼서 extends | 메소드 타입스크립트
 
 export interface IInfState {
   labels: string[];

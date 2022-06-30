@@ -31,7 +31,6 @@ export default defineComponent({
   },
 
   setup(props) {
-    console.log("dfdd", props.period);
     const store = useStore();
     let infState = ref("");
 

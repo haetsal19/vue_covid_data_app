@@ -17,7 +17,7 @@ export const districts: Module<IDistrictsState, IRootState> = {
     async setDistricts({ commit }) {
       const districts = {} as IDistrictsState;
       const res = <IDistrictsResponse[]>await fetchDistricts();
-
+      console.log("districts", res);
       res.forEach((value) => {
         const district: string = value.gubunEn.replace("-", "");
         const place = districts[district];
@@ -31,6 +31,10 @@ export const districts: Module<IDistrictsState, IRootState> = {
           };
           return;
         }
+        //actions는 데이터를 발췌해서 가져오는 것 까지만
+        //계산 가공 내보내는건 게터가 한다
+        //mutation은 받은 데이터를 state에 전달해 변경
+        //mutations getters 분리파일
 
         const diff = place.today - value.incDec;
 
